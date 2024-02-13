@@ -1,17 +1,17 @@
 
 //#define ESP32
-//#define OTA
-//const char* ota_password = "<YOUR OTA PASSWORD GOES HERE>";
+#define OTA
+const char* ota_password = "ota_badonellihome";
 
 // wifi settings
-const char* ssid     = "<YOUR WIFI SSID GOES HERE>";
-const char* password = "<YOUR WIFI PASSWORD GOES HERE>";
+const char* ssid     = "Badonelli";
+const char* password = "GabrieleViola";
 
 // mqtt server settings
-const char* mqtt_server   = "<YOUR MQTT BROKER IP/HOSTNAME GOES HERE>";
+const char* mqtt_server   = "homeassistant.local";
 const int mqtt_port       = 1883;
-const char* mqtt_username = "<YOUR MQTT USERNAME GOES HERE>";
-const char* mqtt_password = "<YOUR MQTT PASSWORD GOES HERE>";
+const char* mqtt_username = "user_mqtt";
+const char* mqtt_password = "badonellihome";
 
 // mqtt client settings
 // Note PubSubClient.h has a MQTT_MAX_PACKET_SIZE of 128 defined, so either raise it to 256 or use short topics

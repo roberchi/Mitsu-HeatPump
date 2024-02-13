@@ -6,7 +6,7 @@
 #endif
 #include <ArduinoJson.h>
 #include <PubSubClient.h>
-#include <HeatPump.h>
+#include "HeatPump.h"
 
 #include "mitsubishi_heatpump_mqtt_esp8266_esp32.h"
 
@@ -71,8 +71,7 @@ void setup() {
 }
 
 void hpSettingsChanged() {
-  const size_t bufferSize = JSON_OBJECT_SIZE(6);
-  DynamicJsonDocument root(bufferSize);
+  JsonDocument root;
 
   heatpumpSettings currentSettings = hp.getSettings();
 
@@ -95,8 +94,7 @@ void hpSettingsChanged() {
 
 void hpStatusChanged(heatpumpStatus currentStatus) {
   // send room temp and operating info
-  const size_t bufferSizeInfo = JSON_OBJECT_SIZE(2);
-  DynamicJsonDocument rootInfo(bufferSizeInfo);
+  JsonDocument rootInfo;
 
   rootInfo["roomTemperature"] = currentStatus.roomTemperature;
   rootInfo["operating"]       = currentStatus.operating;
@@ -109,8 +107,7 @@ void hpStatusChanged(heatpumpStatus currentStatus) {
   }
 
   // send the timer info
-  const size_t bufferSizeTimers = JSON_OBJECT_SIZE(5);
-  DynamicJsonDocument rootTimers(bufferSizeTimers);
+  JsonDocument rootTimers;
 
   rootTimers["mode"]          = currentStatus.timers.mode;
   rootTimers["onMins"]        = currentStatus.timers.onMinutesSet;
@@ -136,8 +133,7 @@ void hpPacketDebug(byte* packet, unsigned int length, char* packetDirection) {
       message += String(packet[idx], HEX) + " ";
     }
 
-    const size_t bufferSize = JSON_OBJECT_SIZE(6);
-    DynamicJsonDocument root(bufferSize);
+    JsonDocument root;
 
     root[packetDirection] = message;
 
@@ -160,8 +156,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   if (strcmp(topic, heatpump_set_topic) == 0) { //if the incoming message is on the heatpump_set_topic topic...
     // Parse message into JSON
-    const size_t bufferSize = JSON_OBJECT_SIZE(6);
-    DynamicJsonDocument root(bufferSize);
+    JsonDocument root;
     DeserializationError error = deserializeJson(root, message);
 
     if (error) {

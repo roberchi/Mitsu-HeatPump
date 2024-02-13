@@ -1,39 +1,52 @@
 // Home Assistant Mitsubishi Electric Heat Pump Controller https://github.com/unixko/MitsuCon
 // using native MQTT Climate (HVAC) component with MQTT discovery for automatic configuration
 // Set PubSubClient.h MQTT_MAX_PACKET_SIZE to 2048
+#define debug_print                                                // manages most of the print and println debug, not all but most
+
+#if defined debug_print
+   #define debug_begin(x)        Serial.begin(x)
+   #define debug(x)                   Serial.print(x)
+   #define debugln(x)                 Serial.println(x)
+#else
+   #define debug_begin(x)
+   #define debug(x)
+   #define debugln(x)
+#endif
 
 // enable extra MQTT topic for debug/timer info
-bool _debugMode  = false;
-bool _timersAttr = false;
+bool _debugMode  = true;
+#define TIMER_ATTR
+#define SWING_MODE
 
 // comment out to disable OTA
 #define OTA
-const char* ota_password  = "OTA_PASSWORD";
+const char* ota_password  = "ota_badonellihome";
 
 // wifi settings
-const char* ssid          = "WIFI_SSID";
-const char* password      = "WIFI_PASSWORD";
+const char* ssid          = "Badonelli";
+const char* password      = "GabrieleViola";
 
 // mqtt server settings
-const char* mqtt_server   = "MQTT_SERVER_NAME_OR_IP";
+const char* mqtt_server   = "homeassistant.local";
 const int mqtt_port       = 1883;
-const char* mqtt_username = "MQTT_USER";
-const char* mqtt_password = "MQTT_PASSWORD";
+const char* mqtt_username = "user_mqtt";
+const char* mqtt_password = "badonellihome";
 
 // mqtt client settings
 // Change "heatpump" to be same on all lines
 const char* name                                = "Heat Pump"; // Device Name displayed in Home Assistant
 const char* client_id                           = "heatpump"; // WiFi hostname, OTA hostname, MQTT hostname
-const char* heatpump_topic                      = "heatpump"; // MQTT topic, must be unique between heat pump unit
-const char* heatpump_availability_topic         = "heatpump/tele/avty";
-const char* heatpump_state_topic                = "heatpump/tele/stat";
-const char* heatpump_current_topic              = "heatpump/tele/curr";
-const char* heatpump_attribute_topic            = "heatpump/tele/attr";
-const char* heatpump_mode_command_topic         = "heatpump/cmnd/mode";
-const char* heatpump_temperature_command_topic  = "heatpump/cmnd/temp";
-const char* heatpump_fan_mode_command_topic     = "heatpump/cmnd/fan";
-const char* heatpump_swing_mode_command_topic   = "heatpump/cmnd/vane";
-const char* heatpump_debug_topic                = "heatpump/debug";
+const char* heatpump_topic                      = "heatpump/{id}"; // MQTT topic, must be unique between heat pump unit
+const char* heatpump_availability_topic         = "heatpump/{id}/tele/avty";
+const char* heatpump_state_topic                = "heatpump/{id}/tele/stat";
+const char* heatpump_current_topic              = "heatpump/{id}/tele/curr";
+const char* heatpump_attribute_topic            = "heatpump/{id}/tele/attr";
+const char* heatpump_mode_command_topic         = "heatpump/{id}/cmnd/mode";
+const char* heatpump_temperature_command_topic  = "heatpump/{id}/cmnd/temp";
+const char* heatpump_fan_mode_command_topic     = "heatpump/{id}/cmnd/fan";
+const char* heatpump_swing_mode_command_topic   = "heatpump/{id}/cmnd/vane";
+const char* heatpump_debug_topic                = "heatpump/{id}/debug";
+const char* heatpump_identify_command_topic     = "heatpump/identify";
 
 // Customization
 const char* min_temp                    = "16"; // Minimum temperature, check value from heatpump remote control
