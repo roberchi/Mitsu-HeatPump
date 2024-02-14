@@ -1,3 +1,4 @@
+this is a fork of [https://github.com/unixko/MitsuCon/tree/master]
 # MitsuCon
 Mitsubishi Heat Pump (Air Conditioner) Controller for Home Assistant
 
