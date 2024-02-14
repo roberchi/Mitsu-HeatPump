@@ -18,6 +18,7 @@ HeatPump hp;
 unsigned long lastTempSend;
 const char* controller_sw_version = "20240212";
 ezLED blueLed(LED_BUILTIN, CTRL_CATHODE);
+HardwareSerial serialBus();
 
 const char* clientTopic(const char* topicTemplate) {
   String topic = String(topicTemplate);
@@ -336,8 +337,9 @@ void setup() {
   hp.setSettingsChangedCallback(hpSettingsChanged);
   hp.setStatusChangedCallback(hpStatusChanged);
   hp.setPacketCallback(hpPacketDebug);
+  
   Serial.println("Heat pump connect");
-  //hp.connect(NULL);
+  hp.connect(&Serial1); // TODO: use sw serial port for ESP8266 to use Serial for debug
 
   lastTempSend = millis();
 }
@@ -357,25 +359,28 @@ void wifiReconnect() {
   blueLed.cancel();
 }
 
-void loop() {
+void handleConnection(){
   while (!mqtt_client.connected()) {
     if (mqttConnect() == -1)  // WiFi disconnected
       wifiReconnect();
     else
       mqttAutoDiscovery();  // on first connect or reconnect send autodiscovery to HA
   }
+}
 
-  //hp.sync();
-  //Serial.println("hp.sync ok");
-
+void handleHeatPumpStatus(){
+  hp.sync();
+  
   if (millis() > (lastTempSend + SEND_ROOM_TEMP_INTERVAL_MS)) {
     blueLed.fade(255, 0, 1000);
-    //hpStatusChanged(hp.getStatus());
-    Serial.println("hp.getStatus ok");
+    hpStatusChanged(hp.getStatus());
     lastTempSend = millis();
   }
+}
 
-  // handle mqtt, led and OTA
+void loop() {
+  handleConnection();
+  handleHeatPumpStatus();
   mqtt_client.loop();
   blueLed.loop();
 #ifdef OTA

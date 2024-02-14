@@ -92,6 +92,7 @@ bool HeatPump::connect(HardwareSerial *serial, bool retry) {
   if(serial != NULL) {
     _HardSerial = serial;
   }
+
   connected = false;
   _HardSerial->begin(bitrate, SERIAL_8E1);
   if(onConnectCallback) {

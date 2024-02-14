@@ -1,6 +1,7 @@
 // Home Assistant Mitsubishi Electric Heat Pump Controller https://github.com/unixko/MitsuCon
 // using native MQTT Climate (HVAC) component with MQTT discovery for automatic configuration
 // Set PubSubClient.h MQTT_MAX_PACKET_SIZE to 2048
+#include "password.h"
 #define debug_print                                                // manages most of the print and println debug, not all but most
 
 #if defined debug_print
@@ -20,17 +21,17 @@ bool _debugMode  = true;
 
 // comment out to disable OTA
 #define OTA
-const char* ota_password  = "ota_badonellihome";
+const char* ota_password  = _ota_password;
 
 // wifi settings
-const char* ssid          = "Badonelli";
-const char* password      = "GabrieleViola";
+const char* ssid          = _ssid;
+const char* password      = _password;
 
 // mqtt server settings
-const char* mqtt_server   = "homeassistant.local";
-const int mqtt_port       = 1883;
-const char* mqtt_username = "user_mqtt";
-const char* mqtt_password = "badonellihome";
+const char* mqtt_server   = _mqtt_server;
+const int mqtt_port       = _mqtt_port;
+const char* mqtt_username = _mqtt_username;
+const char* mqtt_password = _mqtt_password;
 
 // mqtt client settings
 // Change "heatpump" to be same on all lines
@@ -53,10 +54,6 @@ const char* min_temp                    = "16"; // Minimum temperature, check va
 const char* max_temp                    = "31"; // Maximum temperature, check value from heatpump remote control
 const char* temp_step                   = "1"; // Temperature setting step, check value from heatpump remote control
 const char* mqtt_discov_prefix          = "homeassistant"; // Home Assistant MQTT Discovery Prefix
-
-// pinouts
-const int redLedPin  = 0; // Onboard LED = digital pin 0 (red LED on adafruit ESP8266 huzzah)
-const int blueLedPin = 2; // Onboard LED = digital pin 0 (blue LED on adafruit ESP8266 huzzah)
 
 // sketch settings
 const unsigned int SEND_ROOM_TEMP_INTERVAL_MS = 60000;
